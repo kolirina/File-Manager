@@ -14,6 +14,11 @@ let currentDir = homeDir;
 console.log(`Welcome to the File Manager, ${username}!`);
 console.log(`You are currently in ${currentDir}`);
 
+function setCurrentDir(newDir) {
+  currentDir = newDir;
+  console.log(`You are currently in ${currentDir}`);
+}
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -27,7 +32,7 @@ rl.on("line", (input) => {
 
   switch (command) {
     case "up":
-      up();
+      up(currentDir, setCurrentDir);
       break;
     case "cd":
       cd(args[0], currentDir, setCurrentDir);

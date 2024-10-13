@@ -1,11 +1,13 @@
 import path from "node:path";
 import fs from "node:fs";
 
-export function up() {
+export function up(currentDir, setCurrentDir) {
   const parentDir = path.resolve(currentDir, "..");
   if (parentDir !== currentDir) {
-    currentDir = parentDir;
-    console.log(`You are currently in ${currentDir}`);
+    setCurrentDir(parentDir);
+    // console.log(`You are currently in ${currentDir}`);
+  } else {
+    console.log("Already at the root directory");
   }
 }
 
