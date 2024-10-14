@@ -4,6 +4,7 @@ import { osInfo } from "./commands/system.js";
 import { hash } from "./commands/hash.js";
 import { compress, decompress } from "./commands/compression.js";
 import { getUsername } from "./utils/username.js";
+import { SPARKLING_MAGENTA, CYAN, RED } from "./utils/styleConstants.js";
 import readline from "node:readline";
 import os from "node:os";
 
@@ -11,12 +12,12 @@ const username = getUsername();
 const homeDir = os.homedir();
 let currentDir = homeDir;
 
-console.log(`Welcome to the File Manager, ${username}!`);
-console.log(`You are currently in ${currentDir}`);
+console.log(SPARKLING_MAGENTA, `Welcome to the File Manager, ${username}!`);
+console.log(CYAN, `You are currently in ${currentDir}`);
 
 function setCurrentDir(newDir) {
   currentDir = newDir;
-  console.log(`You are currently in ${currentDir}`);
+  console.log(CYAN, `You are currently in ${currentDir}`);
 }
 
 const rl = readline.createInterface({
@@ -74,12 +75,15 @@ rl.on("line", (input) => {
       rl.close();
       break;
     default:
-      console.log("Invalid input");
+      console.log(RED, "Invalid input");
   }
 
   rl.prompt();
 });
 
 rl.on("close", () => {
-  console.log(`Thank you for using File Manager, ${username}, goodbye!`);
+  console.log(
+    SPARKLING_MAGENTA,
+    `Thank you for using File Manager, ${username}, goodbye!`
+  );
 });

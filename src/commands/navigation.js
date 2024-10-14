@@ -1,47 +1,54 @@
 import path from "node:path";
-import fs from "node:fs";
+import fs from "node:fs/promises";
+import { GREEN, RED } from "../utils/styleConstants.js";
 
 export function up(currentDir, setCurrentDir) {
   const parentDir = path.resolve(currentDir, "..");
   if (parentDir !== currentDir) {
     setCurrentDir(parentDir);
-    // console.log(`You are currently in ${currentDir}`);
   } else {
-    console.log("Already at the root directory");
+    console.log(GREEN, "Already at the root directory");
   }
 }
 
-export function cd(destination, currentDir, setCurrentDir) {
+export async function cd(destination, currentDir, setCurrentDir) {
   const newDir = path.resolve(currentDir, destination);
-  if (fs.existsSync(newDir) && fs.lstatSync(newDir).isDirectory()) {
-    setCurrentDir(newDir);
-    console.log(`You are currently in ${newDir}`);
-  } else {
-    console.log("Operation failed");
+
+  try {
+    await fs.access(newDir);
+    const stats = await fs.lstat(newDir);
+
+    if (stats.isDirectory()) {
+      setCurrentDir(newDir);
+    } else {
+      console.log(RED, "Operation failed: Not a directory");
+    }
+  } catch (err) {
+    console.log(RED, "Operation failed:", err.message);
   }
 }
 
-export function ls(currentDir) {
-  fs.readdir(currentDir, (err, files) => {
-    if (err) {
-      console.log("Operation failed");
-      return;
-    }
+export async function ls(currentDir) {
+  try {
+    const files = await fs.readdir(currentDir);
 
-    const fileData = files
-      .map((file) => {
+    const fileData = await Promise.all(
+      files.map(async (file) => {
         const filePath = path.join(currentDir, file);
         try {
-          const stats = fs.lstatSync(filePath);
+          const stats = await fs.lstat(filePath);
           return {
             Name: file,
             Type: stats.isDirectory() ? "directory" : "file",
           };
         } catch (error) {
-          console.error(`Error accessing ${filePath}: ${error.message}`);
+          console.error(RED, `Error accessing ${filePath}: ${error.message}`);
           return null;
         }
       })
+    );
+
+    const filteredData = fileData
       .filter((item) => item !== null)
       .sort((a, b) =>
         a.Type === b.Type
@@ -51,6 +58,8 @@ export function ls(currentDir) {
           : 1
       );
 
-    console.table(fileData);
-  });
+    console.table(filteredData);
+  } catch (err) {
+    console.log("Operation failed:", err.message);
+  }
 }

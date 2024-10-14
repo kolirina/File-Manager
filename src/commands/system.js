@@ -1,27 +1,31 @@
 import os from "node:os";
+import { GREEN, SPARKLING_MAGENTA, RED } from "../utils/styleConstants.js";
 
 export function osInfo(arg) {
   switch (arg) {
     case "--EOL":
-      console.log(JSON.stringify(os.EOL));
+      console.log(GREEN, JSON.stringify(os.EOL));
       break;
     case "--cpus":
       const cpus = os.cpus();
-      console.log(`Overall CPUs: ${cpus.length}`);
+      console.log(SPARKLING_MAGENTA, `Overall CPUs: ${cpus.length}`);
       cpus.forEach((cpu, index) => {
-        console.log(`CPU ${index + 1}: ${cpu.model}, ${cpu.speed / 1000} GHz`);
+        console.log(
+          GREEN,
+          `CPU ${index + 1}: ${cpu.model}, ${cpu.speed / 1000} GHz`
+        );
       });
       break;
     case "--homedir":
-      console.log(os.homedir());
+      console.log(GREEN, os.homedir());
       break;
     case "--username":
-      console.log(os.userInfo().username);
+      console.log(GREEN, os.userInfo().username);
       break;
     case "--architecture":
-      console.log(os.arch());
+      console.log(GREEN, os.arch());
       break;
     default:
-      console.log("Invalid input");
+      console.log(RED, "Invalid input");
   }
 }
