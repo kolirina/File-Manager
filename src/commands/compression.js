@@ -2,6 +2,7 @@ import zlib from "node:zlib";
 import fs from "node:fs";
 import path from "node:path";
 import { pipeline } from "node:stream/promises";
+import { GREEN, RED } from "../utils/styleConstants.js";
 
 export async function compress(filePath, destinationPath, currentDir) {
   const source = path.resolve(currentDir, filePath);
@@ -12,9 +13,9 @@ export async function compress(filePath, destinationPath, currentDir) {
 
   try {
     await pipeline(readStream, brotli, writeStream);
-    console.log("File compressed");
+    console.log(GREEN, "File compressed");
   } catch (err) {
-    console.log("Operation failed:", err.message);
+    console.log(RED, "Operation failed:", err.message);
   }
 }
 
@@ -27,8 +28,8 @@ export async function decompress(filePath, destinationPath, currentDir) {
 
   try {
     await pipeline(readStream, brotli, writeStream);
-    console.log("File decompressed");
+    console.log(GREEN, "File decompressed");
   } catch (err) {
-    console.log("Operation failed:", err.message);
+    console.log(RED, "Operation failed:", err.message);
   }
 }
