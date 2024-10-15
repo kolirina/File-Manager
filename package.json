@@ -1,9 +1,10 @@
 {
+  "type": "module",
   "name": "file_manager",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node src/fileManager.js"
   },
   "keywords": [],
   "author": "",
